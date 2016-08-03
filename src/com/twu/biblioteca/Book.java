@@ -1,18 +1,19 @@
 package com.twu.biblioteca;
 
-
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
+import java.time.Year;
 
 public class Book {
 
     private String barcode;
     private String title;
     private String author;
+    private Year yearPublished;
 
-    public Book(String barcode, String title, String author) {
+    public Book(String barcode, String title, String author, Year yearPublished) {
         this.barcode = barcode;
         this.title = title;
         this.author = author;
+        this.yearPublished = yearPublished;
     }
 
     public String getBarcode() {
@@ -27,8 +28,13 @@ public class Book {
         return author;
     }
 
+    public Year getYearPublished() {
+        return yearPublished;
+    }
+
     @Override
     public String toString() {
-        return "[" + this.barcode + "] " + title + " by " + author;
+        return "[" + this.barcode + "] " + title + " by " + author
+                + " published " + yearPublished.toString();
     }
 }
