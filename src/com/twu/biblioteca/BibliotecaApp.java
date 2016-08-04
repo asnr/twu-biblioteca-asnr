@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
 import java.time.Year;
+import java.util.Scanner;
 
 public class BibliotecaApp {
 
@@ -12,21 +13,12 @@ public class BibliotecaApp {
         };
 
         BookCollection collection = new BookCollection(books);
+        AppController controller = new AppController(collection);
 
-        System.out.println("Welcome to Biblioteca.");
-        System.out.println(prettyAvailableBooks(collection.availableBooks()));
-    }
+        Scanner consoleInput = new Scanner(System.in);
 
-    public static String prettyAvailableBooks(Book[] books) {
-        if (books.length == 0) {
-            return "No books available.";
-        }
-
-        StringBuilder pretty = new StringBuilder();
-        pretty.append("Available books:");
-        for (Book book : books) {
-            pretty.append("\n  ").append(book.toString());
-        }
-        return pretty.toString();
+        System.out.println(controller.startScreen().printScreen());
+        consoleInput.nextLine();
+        System.out.println(controller.processInput("a").printScreen());
     }
 }
