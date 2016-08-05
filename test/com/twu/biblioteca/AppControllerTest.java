@@ -41,7 +41,16 @@ public class AppControllerTest {
     public void processInputSelectListBooks() {
 //        Arrays.copyOfRange(this.books, 0, 2)
         AppController controller = new AppController(sixBookCollection);
-        Screen screen = controller.processInput("a");
+        Screen screen = controller.processInput(new String("a"));
         assertEquals(new ListBooksScreen(books), screen);
+    }
+
+    @Test
+    public void processInputIncorrectInput() {
+        AppController controller = new AppController(sixBookCollection);
+        Screen screen = controller.processInput("!!");
+        assertEquals(new InvalidOptionScreen(), screen);
+        screen = controller.processInput("");
+        assertEquals(new MainMenuScreen(), screen);
     }
 }

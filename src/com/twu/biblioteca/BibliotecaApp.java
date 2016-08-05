@@ -1,5 +1,6 @@
 package com.twu.biblioteca;
 
+import java.io.PrintStream;
 import java.time.Year;
 import java.util.Scanner;
 
@@ -17,8 +18,22 @@ public class BibliotecaApp {
 
         Scanner consoleInput = new Scanner(System.in);
 
-        System.out.println(controller.startScreen().printScreen());
-        consoleInput.nextLine();
-        System.out.println(controller.processInput("a").printScreen());
+        runApp(consoleInput, System.out, controller);
+    }
+
+
+    public static void runApp(Scanner in, PrintStream out, AppController controller) {
+
+        Screen currScreen = controller.startScreen();
+        out.println(currScreen.printScreen());
+
+        while (true) {
+
+            String userInput = in.nextLine();
+            currScreen = controller.processInput(userInput);
+            out.println(currScreen.printScreen());
+
+        }
+
     }
 }
