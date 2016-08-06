@@ -1,5 +1,11 @@
 package com.twu.biblioteca;
 
+import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.view.QuitScreen;
+import com.twu.biblioteca.view.Screen;
+import com.twu.biblioteca.model.Book;
+import com.twu.biblioteca.model.BookCollection;
+
 import java.io.PrintStream;
 import java.time.Year;
 import java.util.Scanner;
@@ -27,7 +33,9 @@ public class BibliotecaApp {
         Screen currScreen = controller.startScreen();
         out.println(currScreen.printScreen());
 
-        while (true) {
+        Screen lastScreen = new QuitScreen();
+
+        while (!currScreen.equals(lastScreen)) {
 
             String userInput = in.nextLine();
             currScreen = controller.processInput(userInput);

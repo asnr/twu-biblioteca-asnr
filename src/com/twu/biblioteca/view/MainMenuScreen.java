@@ -1,4 +1,4 @@
-package com.twu.biblioteca;
+package com.twu.biblioteca.view;
 
 
 public class MainMenuScreen implements Screen {
@@ -6,7 +6,8 @@ public class MainMenuScreen implements Screen {
             +"Welcome to Biblioteca.\n"
             + "\n"
             + "Main menu:\n"
-            + "  (a) list books\n"
+            + "  (a) List books\n"
+            + "  (q) Quit\n"
             + "\n"
             + "Please select an option:\n";
 

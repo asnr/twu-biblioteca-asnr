@@ -1,5 +1,9 @@
 package com.twu.biblioteca;
 
+import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.view.*;
+import com.twu.biblioteca.model.Book;
+import com.twu.biblioteca.model.BookCollection;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +43,6 @@ public class AppControllerTest {
 
     @Test
     public void processInputSelectListBooks() {
-//        Arrays.copyOfRange(this.books, 0, 2)
         AppController controller = new AppController(sixBookCollection);
         Screen screen = controller.processInput(new String("a"));
         assertEquals(new ListBooksScreen(books), screen);
@@ -52,5 +55,12 @@ public class AppControllerTest {
         assertEquals(new InvalidOptionScreen(), screen);
         screen = controller.processInput("");
         assertEquals(new MainMenuScreen(), screen);
+    }
+
+    @Test
+    public void processInputQuit() {
+        AppController controller = new AppController(sixBookCollection);
+        Screen screen = controller.processInput("q");
+        assertEquals(new QuitScreen(), screen);
     }
 }

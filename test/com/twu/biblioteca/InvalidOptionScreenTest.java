@@ -1,5 +1,8 @@
 package com.twu.biblioteca;
 
+import com.twu.biblioteca.view.InvalidOptionScreen;
+import com.twu.biblioteca.view.MainMenuScreen;
+import com.twu.biblioteca.view.Screen;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

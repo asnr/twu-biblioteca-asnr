@@ -1,8 +1,12 @@
-package com.twu.biblioteca;
+package com.twu.biblioteca.view;
+
+import com.twu.biblioteca.model.Book;
 
 import java.util.Arrays;
 
 public class ListBooksScreen implements Screen {
+
+    public final static String screenEnd = "\n\n Press Enter to return to the main menu.\n";
 
     private Book[] books;
 
@@ -12,7 +16,7 @@ public class ListBooksScreen implements Screen {
 
     public String printScreen() {
         if (books.length == 0) {
-            return "\nNo books available.";
+            return "\nNo books available." + screenEnd;
         }
 
         StringBuilder toPrint = new StringBuilder();
@@ -20,12 +24,16 @@ public class ListBooksScreen implements Screen {
         for (Book book : books) {
             toPrint.append("\n  ").append(book.toString());
         }
+        toPrint.append(screenEnd);
         return toPrint.toString();
     }
 
     public boolean equals(Object obj) {
+        if (!getClass().equals(obj.getClass())) {
+            return false;
+        }
+
         ListBooksScreen screen = (ListBooksScreen) obj;
-        return getClass().equals(obj.getClass())
-                && Arrays.equals(this.books, screen.books);
+        return Arrays.equals(this.books, screen.books);
     }
 }

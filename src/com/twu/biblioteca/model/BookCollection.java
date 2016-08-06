@@ -1,4 +1,6 @@
-package com.twu.biblioteca;
+package com.twu.biblioteca.model;
+
+import com.twu.biblioteca.model.Book;
 
 public class BookCollection {
 

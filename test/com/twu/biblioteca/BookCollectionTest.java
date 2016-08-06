@@ -1,5 +1,7 @@
 package com.twu.biblioteca;
 
+import com.twu.biblioteca.model.Book;
+import com.twu.biblioteca.model.BookCollection;
 import org.junit.Test;
 
 import java.time.Year;
