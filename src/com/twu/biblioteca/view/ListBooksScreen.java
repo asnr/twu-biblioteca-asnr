@@ -6,6 +6,11 @@ import java.util.Arrays;
 
 public class ListBooksScreen implements Screen {
 
+    public final static String noBooksMsg = "\nNo books available. "
+            + "Press Return to go back to the main menu.\n";
+
+    public final static String screenStart = "\nAvailable books:";
+
     public final static String screenEnd =
             "\n\nEnter the barcode of a book and then press Return to check it out, "
             + "otherwise just press Return to go back to the main menu.\n";
@@ -18,11 +23,11 @@ public class ListBooksScreen implements Screen {
 
     public String printScreen() {
         if (books.length == 0) {
-            return "\nNo books available." + screenEnd;
+            return noBooksMsg;
         }
 
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\nAvailable books:");
+        toPrint.append(screenStart);
         for (Book book : books) {
             toPrint.append("\n  ").append(book.toString());
         }

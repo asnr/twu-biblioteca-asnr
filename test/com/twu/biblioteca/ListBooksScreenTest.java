@@ -16,7 +16,7 @@ public class ListBooksScreenTest {
     @Test
     public void printScreenNoBooks() {
         Screen screen = new ListBooksScreen(new Book[] {});
-        String expected = "\nNo books available." + ListBooksScreen.screenEnd;
+        String expected = ListBooksScreen.noBooksMsg;
         assertEquals(expected, screen.printScreen());
     }
 
@@ -24,7 +24,7 @@ public class ListBooksScreenTest {
     public void printScreenOneBook() {
         Book book = new Book("123", "Foo", "Ms. Bar", Year.of(1999));
         Screen screen = new ListBooksScreen(new Book[] {book});
-        String expected = "\nAvailable books:\n  " + book.toString()
+        String expected = ListBooksScreen.screenStart + "\n  " + book.toString()
                 + ListBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
@@ -34,8 +34,8 @@ public class ListBooksScreenTest {
         Book book1 = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
         Book book2 = new Book("102", "Bar", "Mr. Foo", Year.of(1600));
         Screen screen = new ListBooksScreen(new Book[] {book1, book2});
-        String expected = "\nAvailable books:\n  "
-                + book1.toString() + "\n  " + book2.toString()
+        String expected = ListBooksScreen.screenStart
+                + "\n  " + book1.toString() + "\n  " + book2.toString()
                 + ListBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
