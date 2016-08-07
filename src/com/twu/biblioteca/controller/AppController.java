@@ -5,16 +5,14 @@ import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
 
-import static com.twu.biblioteca.controller.AppController.State.ReturnBooks;
-import static com.twu.biblioteca.controller.AppController.State.SuccessfulCheckout;
-import static com.twu.biblioteca.controller.AppController.State.UnsuccessfulCheckout;
+import static com.twu.biblioteca.controller.AppController.State.*;
 
 public class AppController {
 
     public enum State {
         MainMenu, MainMenuInvalidOption,
         ListBooks, SuccessfulCheckout, UnsuccessfulCheckout,
-        ReturnBooks,
+        ReturnBooks, SuccessfulReturn,
         Finished
     }
 
@@ -44,6 +42,8 @@ public class AppController {
                 return new UnsuccessfulCheckoutScreen();
             case ReturnBooks:
                 return new ReturnBooksScreen(collection.checkedOutBooks());
+            case SuccessfulReturn:
+                return new SuccessfulReturnScreen();
             case Finished:
                 return new QuitScreen();
             default:
@@ -136,13 +136,18 @@ public class AppController {
 
                     if (book != null && !book.isAvailable()) {
                         book.checkin();
-                        state = ReturnBooks;
+                        state = SuccessfulReturn;
                     } else {
                         state = ReturnBooks;
                     }
 
                 }
 
+                break;
+
+            case SuccessfulReturn:
+
+                state = State.ReturnBooks;
                 break;
 
             case Finished:

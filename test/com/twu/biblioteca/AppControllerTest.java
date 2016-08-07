@@ -104,10 +104,10 @@ public class AppControllerTest {
     }
 
     @Test
-    public void returnCheckedOutBookFromListBooks() throws NoSuchBookException {
-//        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
-//        fstBook.checkout();
-//        Screen screen = controller.getNextScreen(fstBook.getBarcode());
-//        assertEquals(new ReturnBooksScreen(new Book[] {fstBook}), screen);
+    public void returnCheckedOutBookFromReturnBooks() throws NoSuchBookException {
+        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
+        fstBook.checkout();
+        Screen screen = controller.getNextScreen(fstBook.getBarcode());
+        assertEquals(new SuccessfulReturnScreen(), screen);
     }
 }
