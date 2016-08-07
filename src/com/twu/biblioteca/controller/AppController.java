@@ -5,10 +5,12 @@ import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
 
+import static com.twu.biblioteca.controller.AppController.State.SuccessfulCheckout;
+
 public class AppController {
 
     public enum State {
-        MainMenu, MainMenuInvalidOption, ListBooks, Finished
+        MainMenu, MainMenuInvalidOption, ListBooks, SuccessfulCheckout, Finished
     }
 
     private State state;
@@ -23,10 +25,6 @@ public class AppController {
         this.collection = collection;
     }
 
-    public Screen startScreen() {
-        return new MainMenuScreen();
-    }
-
     public Screen getCurrentScreen() {
         switch (state) {
             case MainMenu:
@@ -35,6 +33,8 @@ public class AppController {
                 return new InvalidOptionScreen();
             case ListBooks:
                 return new ListBooksScreen(collection.availableBooks());
+            case SuccessfulCheckout:
+                return new SuccessfulCheckoutScreen();
             case Finished:
                 return new QuitScreen();
             default:
@@ -91,10 +91,16 @@ public class AppController {
 
                     if (book != null) {
                         book.checkout();
+                        state = SuccessfulCheckout;
                     }
 
                 }
 
+                break;
+
+            case SuccessfulCheckout:
+
+                state = State.ListBooks;
                 break;
 
             case Finished:

@@ -30,7 +30,7 @@ public class BibliotecaApp {
 
     public static void runApp(Scanner in, PrintStream out, AppController controller) {
 
-        Screen currScreen = controller.startScreen();
+        Screen currScreen = controller.getCurrentScreen();
         out.println(currScreen.printScreen());
 
         Screen lastScreen = new QuitScreen();

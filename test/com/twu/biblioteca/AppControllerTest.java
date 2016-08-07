@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Year;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -73,9 +72,9 @@ public class AppControllerTest {
     }
 
     @Test
-    public void correclytCheckoutBookFromListBooks() {
+    public void correctlyCheckoutBookFromListBooks() {
         AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("1a");
-        assertEquals(new ListBooksScreen(Arrays.copyOfRange(this.books, 1, 6)), screen);
+        assertEquals(new SuccessfulCheckoutScreen(), screen);
     }
 }
