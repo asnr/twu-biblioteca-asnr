@@ -1,5 +1,28 @@
-Instructions to push your code to code.google.com
-=================================================
+
+Program design
+==============
+
+The app is structured around a cheap and cheerful ModelViewController implementation.
+
+For the view, each app screen is it's own class that implements a printScreen() function.
+
+The controller is a big ol' switch statement which takes care of processing user input to update the model and move between screens. It could be a finite state machine, but that felt a little excessive.
+
+The model models.
+
+
+Run and test
+============
+
+To run, run BibliotecaApp class from inside Intellij IDEA.
+
+To test, run all the tests in the test/com/twu/biblioteca directory from inside Intellij IDEA.
+
+I guess you should be able to test and run from the console, but I'm going to bed now.
+
+
+Instructions to push your code to github.com
+============================================
 1. Sign into GitHub and create a new repository
         Repository name: twu-biblioteca-yourname
         Privacy level: Public
