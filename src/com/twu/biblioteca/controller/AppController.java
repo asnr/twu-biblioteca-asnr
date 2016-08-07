@@ -16,17 +16,21 @@ public class AppController {
         Finished
     }
 
+
     private State state;
     private BookCollection collection;
+
 
     public AppController(BookCollection collection) {
         this(collection, State.MainMenu);
     }
 
+
     public AppController(BookCollection collection, State startState) {
         this.state = startState;
         this.collection = collection;
     }
+
 
     public Screen getCurrentScreen() {
         switch (state) {
@@ -53,6 +57,7 @@ public class AppController {
         }
     }
 
+
     public Screen getNextScreen(String input) {
 
         updateState(input);
@@ -60,28 +65,13 @@ public class AppController {
         return getCurrentScreen();
     }
 
+
     private void updateState(String input) {
 
         switch (state) {
             case MainMenu:
 
-                if (input.equals(MainMenuScreen.ListBooksOption)) {
-
-                    state = State.ListBooks;
-
-                } else if (input.equals(MainMenuScreen.ReturnBooksOption)) {
-
-                    state = State.ReturnBooks;
-
-                } else if (input.equals(MainMenuScreen.QuitOption)) {
-
-                    state = State.Finished;
-
-                } else {
-
-                    state = State.MainMenuInvalidOption;
-                }
-
+                state = updateMainMenuState(input);
                 break;
 
             case MainMenuInvalidOption:
@@ -91,28 +81,7 @@ public class AppController {
 
             case ListBooks:
 
-                if (input.equals("")) {
-
-                    state = State.MainMenu;
-
-                } else {
-
-                    Book book;
-                    try {
-                        book = collection.getBook(input);
-                    } catch (NoSuchBookException e) {
-                        book = null;
-                    }
-
-                    if (book != null && book.isAvailable()) {
-                        book.checkout();
-                        state = SuccessfulCheckout;
-                    } else {
-                        state = UnsuccessfulCheckout;
-                    }
-
-                }
-
+                state = updateListBooksState(input);
                 break;
 
             case SuccessfulCheckout:
@@ -123,28 +92,7 @@ public class AppController {
 
             case ReturnBooks:
 
-                if (input.equals("")) {
-
-                    state = State.MainMenu;
-
-                } else {
-
-                    Book book;
-                    try {
-                        book = collection.getBook(input);
-                    } catch (NoSuchBookException e) {
-                        book = null;
-                    }
-
-                    if (book != null && !book.isAvailable()) {
-                        book.checkin();
-                        state = SuccessfulReturn;
-                    } else {
-                        state = UnsuccessfulReturn;
-                    }
-
-                }
-
+                state = updateReturnBooksState(input);
                 break;
 
             case SuccessfulReturn:
@@ -162,5 +110,75 @@ public class AppController {
                 state = State.MainMenu;
                 break;
         }
+    }
+
+
+    private State updateMainMenuState(String input) {
+        if (input.equals(MainMenuScreen.ListBooksOption)) {
+
+            return State.ListBooks;
+
+        } else if (input.equals(MainMenuScreen.ReturnBooksOption)) {
+
+            return State.ReturnBooks;
+
+        } else if (input.equals(MainMenuScreen.QuitOption)) {
+
+            return State.Finished;
+
+        } else {
+
+            return State.MainMenuInvalidOption;
+        }
+    }
+
+
+    private State updateListBooksState(String input) {
+
+        if (input.equals("")) {
+            return State.MainMenu;
+        }
+
+        State newState;
+        Book book;
+        try {
+            book = collection.getBook(input);
+        } catch (NoSuchBookException e) {
+            book = null;
+        }
+
+        if (book != null && book.isAvailable()) {
+            book.checkout();
+            newState = SuccessfulCheckout;
+        } else {
+            newState = UnsuccessfulCheckout;
+        }
+
+        return newState;
+    }
+
+
+    private State updateReturnBooksState(String input) {
+
+        if (input.equals("")) {
+            return State.MainMenu;
+        }
+
+        State newState;
+        Book book;
+        try {
+            book = collection.getBook(input);
+        } catch (NoSuchBookException e) {
+            book = null;
+        }
+
+        if (book != null && !book.isAvailable()) {
+            book.checkin();
+            newState = SuccessfulReturn;
+        } else {
+            newState = UnsuccessfulReturn;
+        }
+
+        return newState;
     }
 }

@@ -115,6 +115,14 @@ public class AppControllerTest {
     }
 
     @Test
+    public void returnBooksReturnsToMainMenuOnEmptyInput() {
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.ReturnBooks);
+        Screen screen = controller.getNextScreen("");
+        assertEquals(new MainMenuScreen(), screen);
+    }
+
+    @Test
     public void returnCheckedOutBookFromReturnBooks() throws NoSuchBookException {
         AppController controller = new AppController(oneBookCollection,
                 AppController.State.ReturnBooks);
