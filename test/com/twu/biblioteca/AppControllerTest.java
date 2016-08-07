@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Year;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,32 +36,46 @@ public class AppControllerTest {
     }
 
     @Test
-    public void startScreenEmptyCollection() {
+    public void defaultStartScreenIsMainMenu() {
         AppController controller = new AppController(emptyCollection);
-        Screen screen = controller.startScreen();
+        Screen screen = controller.getCurrentScreen();
         assertEquals(new MainMenuScreen(), screen);
     }
 
     @Test
-    public void processInputSelectListBooks() {
-        AppController controller = new AppController(sixBookCollection);
-        Screen screen = controller.processInput(new String("a"));
+    public void mainMenuSelectListBooksOption() {
+        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(new String("a"));
         assertEquals(new ListBooksScreen(books), screen);
     }
 
     @Test
-    public void processInputIncorrectInput() {
-        AppController controller = new AppController(sixBookCollection);
-        Screen screen = controller.processInput("!!");
+    public void mainMenuSelectIncorrectInput() {
+        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen("!!");
         assertEquals(new InvalidOptionScreen(), screen);
-        screen = controller.processInput("");
+        screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
     }
 
     @Test
-    public void processInputQuit() {
-        AppController controller = new AppController(sixBookCollection);
-        Screen screen = controller.processInput("q");
+    public void mainMenuSelectQuit() {
+        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen("q");
         assertEquals(new QuitScreen(), screen);
+    }
+
+    @Test
+    public void listBooksReturnsToMainMenuOnEmptyInput() {
+        AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
+        Screen screen = controller.getNextScreen("");
+        assertEquals(new MainMenuScreen(), screen);
+    }
+
+    @Test
+    public void correclytCheckoutBookFromListBooks() {
+        AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
+        Screen screen = controller.getNextScreen("1a");
+        assertEquals(new ListBooksScreen(Arrays.copyOfRange(this.books, 1, 6)), screen);
     }
 }

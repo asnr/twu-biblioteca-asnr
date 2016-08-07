@@ -38,7 +38,7 @@ public class BibliotecaApp {
         while (!currScreen.equals(lastScreen)) {
 
             String userInput = in.nextLine();
-            currScreen = controller.processInput(userInput);
+            currScreen = controller.getNextScreen(userInput);
             out.println(currScreen.printScreen());
 
         }

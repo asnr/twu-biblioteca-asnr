@@ -9,11 +9,14 @@ public class Book {
     private String author;
     private Year yearPublished;
 
+    private boolean checkedOut;
+
     public Book(String barcode, String title, String author, Year yearPublished) {
         this.barcode = barcode;
         this.title = title;
         this.author = author;
         this.yearPublished = yearPublished;
+        this.checkedOut = false;
     }
 
     public String getBarcode() {
@@ -30,6 +33,14 @@ public class Book {
 
     public Year getYearPublished() {
         return yearPublished;
+    }
+
+    public void checkout() {
+        checkedOut = true;
+    }
+
+    public boolean isAvailable() {
+        return !checkedOut;
     }
 
     @Override

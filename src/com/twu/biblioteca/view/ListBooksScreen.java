@@ -6,7 +6,9 @@ import java.util.Arrays;
 
 public class ListBooksScreen implements Screen {
 
-    public final static String screenEnd = "\n\n Press Enter to return to the main menu.\n";
+    public final static String screenEnd =
+            "\n\nEnter the barcode of a book and then press Return to check it out, "
+            + "otherwise just press Return to return to the main menu.\n";
 
     private Book[] books;
 

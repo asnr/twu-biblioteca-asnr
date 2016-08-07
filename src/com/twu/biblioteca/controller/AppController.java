@@ -1,11 +1,13 @@
 package com.twu.biblioteca.controller;
 
+import com.twu.biblioteca.model.Book;
+import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
 
 public class AppController {
 
-    private enum State {
+    public enum State {
         MainMenu, MainMenuInvalidOption, ListBooks, Finished
     }
 
@@ -13,7 +15,11 @@ public class AppController {
     private BookCollection collection;
 
     public AppController(BookCollection collection) {
-        this.state = State.MainMenu;
+        this(collection, State.MainMenu);
+    }
+
+    public AppController(BookCollection collection, State startState) {
+        this.state = startState;
         this.collection = collection;
     }
 
@@ -21,50 +27,84 @@ public class AppController {
         return new MainMenuScreen();
     }
 
-    public Screen processInput(String input) {
+    public Screen getCurrentScreen() {
+        switch (state) {
+            case MainMenu:
+                return new MainMenuScreen();
+            case MainMenuInvalidOption:
+                return new InvalidOptionScreen();
+            case ListBooks:
+                return new ListBooksScreen(collection.availableBooks());
+            case Finished:
+                return new QuitScreen();
+            default:
+                return new MainMenuScreen();
+        }
+    }
 
-        Screen newScreen;
+    public Screen getNextScreen(String input) {
+
+        updateState(input);
+
+        return getCurrentScreen();
+    }
+
+    private void updateState(String input) {
 
         switch (state) {
-
             case MainMenu:
 
                 if (input.equals("a")) {
 
                     state = State.ListBooks;
-                    newScreen = new ListBooksScreen(collection.availableBooks());
 
                 } else if (input.equals("q")) {
 
                     state = State.Finished;
-                    newScreen = new QuitScreen();
 
                 } else {
 
                     state = State.MainMenuInvalidOption;
-                    newScreen = new InvalidOptionScreen();
                 }
 
                 break;
 
             case MainMenuInvalidOption:
 
-                state = State.MainMenuInvalidOption;
-                newScreen = new MainMenuScreen();
+                state = State.MainMenu;
+                break;
+
+            case ListBooks:
+
+                if (input.equals("")) {
+
+                    state = State.MainMenu;
+
+                } else {
+
+                    Book book;
+                    try {
+                        book = collection.getBook(input);
+                    } catch (NoSuchBookException e) {
+                        book = null;
+                    }
+
+                    if (book != null) {
+                        book.checkout();
+                    }
+
+                }
+
                 break;
 
             case Finished:
 
-                newScreen = new QuitScreen();
                 break;
 
             default:
 
                 state = State.MainMenu;
-                newScreen = new MainMenuScreen();
                 break;
         }
-
-        return newScreen;
     }
 }

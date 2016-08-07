@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.time.Year;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BookTest {
     @Test
@@ -31,4 +33,19 @@ public class BookTest {
         Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
         assertEquals("[123] Catch-22 by Joseph Heller published 1961", book.toString());
     }
+
+    @Test
+    public void newBookIsAvailable() {
+        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
+        assertTrue(book.isAvailable());
+    }
+
+    @Test
+    public void checkedOutBookIsNotAvailable() {
+        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
+        book.checkout();
+        assertFalse(book.isAvailable());
+    }
+    
+    
 }
