@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
 import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.Book;
 import com.twu.biblioteca.model.BookCollection;
@@ -76,5 +77,20 @@ public class AppControllerTest {
         AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("1a");
         assertEquals(new SuccessfulCheckoutScreen(), screen);
+    }
+
+    @Test
+    public void checkoutAlreadyCheckedOutBookFromListBooks() throws NoSuchBookException {
+        AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
+        oneBookCollection.getBook("1a").checkout();
+        Screen screen = controller.getNextScreen("1a");
+        assertEquals(new UnsuccessfulCheckoutScreen(), screen);
+    }
+
+    @Test
+    public void checkoutNonexistentBookFromListBooks() throws NoSuchBookException {
+        AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
+        Screen screen = controller.getNextScreen("!!");
+        assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
 }

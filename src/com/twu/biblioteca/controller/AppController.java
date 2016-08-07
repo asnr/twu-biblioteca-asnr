@@ -6,11 +6,13 @@ import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
 
 import static com.twu.biblioteca.controller.AppController.State.SuccessfulCheckout;
+import static com.twu.biblioteca.controller.AppController.State.UnsuccessfulCheckout;
 
 public class AppController {
 
     public enum State {
-        MainMenu, MainMenuInvalidOption, ListBooks, SuccessfulCheckout, Finished
+        MainMenu, MainMenuInvalidOption, ListBooks, SuccessfulCheckout,
+        UnsuccessfulCheckout, Finished
     }
 
     private State state;
@@ -35,6 +37,8 @@ public class AppController {
                 return new ListBooksScreen(collection.availableBooks());
             case SuccessfulCheckout:
                 return new SuccessfulCheckoutScreen();
+            case UnsuccessfulCheckout:
+                return new UnsuccessfulCheckoutScreen();
             case Finished:
                 return new QuitScreen();
             default:
@@ -89,9 +93,11 @@ public class AppController {
                         book = null;
                     }
 
-                    if (book != null) {
+                    if (book != null && book.isAvailable()) {
                         book.checkout();
                         state = SuccessfulCheckout;
+                    } else {
+                        state = UnsuccessfulCheckout;
                     }
 
                 }
@@ -99,6 +105,7 @@ public class AppController {
                 break;
 
             case SuccessfulCheckout:
+            case UnsuccessfulCheckout:
 
                 state = State.ListBooks;
                 break;
