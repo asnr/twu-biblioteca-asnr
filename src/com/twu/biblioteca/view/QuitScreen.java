@@ -1,13 +1,7 @@
 package com.twu.biblioteca.view;
 
-import java.util.Objects;
-
-public class QuitScreen implements Screen {
+public class QuitScreen extends MessageScreen {
     public String printScreen() {
         return "Goodbye.\n";
-    }
-
-    public boolean equals(Object obj) {
-        return getClass().equals(obj.getClass());
     }
 }
