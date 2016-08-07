@@ -84,7 +84,7 @@ public class AppControllerTest {
     @Test
     public void correctlyCheckoutBookFromListBooks() {
         AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
-        Screen screen = controller.getNextScreen("1a");
+        Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulCheckoutScreen(), screen);
     }
 
@@ -99,7 +99,7 @@ public class AppControllerTest {
     @Test
     public void checkoutNonexistentBookFromListBooks() {
         AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
-        Screen screen = controller.getNextScreen("!!");
+        Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
 
@@ -109,5 +109,19 @@ public class AppControllerTest {
         fstBook.checkout();
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulReturnScreen(), screen);
+    }
+
+    @Test
+    public void returnNonexistentBookFromReturnBooks() {
+        AppController controller = new AppController(emptyCollection, AppController.State.ReturnBooks);
+        Screen screen = controller.getNextScreen("!!!");
+        assertEquals(new UnsuccessfulReturnScreen(), screen);
+    }
+
+    @Test
+    public void returnAvailableBookFromReturnBooks() {
+        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
+        Screen screen = controller.getNextScreen(fstBook.getBarcode());
+        assertEquals(new UnsuccessfulReturnScreen(), screen);
     }
 }

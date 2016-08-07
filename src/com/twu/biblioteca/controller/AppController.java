@@ -12,7 +12,7 @@ public class AppController {
     public enum State {
         MainMenu, MainMenuInvalidOption,
         ListBooks, SuccessfulCheckout, UnsuccessfulCheckout,
-        ReturnBooks, SuccessfulReturn,
+        ReturnBooks, SuccessfulReturn, UnsuccessfulReturn,
         Finished
     }
 
@@ -44,6 +44,8 @@ public class AppController {
                 return new ReturnBooksScreen(collection.checkedOutBooks());
             case SuccessfulReturn:
                 return new SuccessfulReturnScreen();
+            case UnsuccessfulReturn:
+                return new UnsuccessfulReturnScreen();
             case Finished:
                 return new QuitScreen();
             default:
@@ -138,7 +140,7 @@ public class AppController {
                         book.checkin();
                         state = SuccessfulReturn;
                     } else {
-                        state = ReturnBooks;
+                        state = UnsuccessfulReturn;
                     }
 
                 }
@@ -146,6 +148,7 @@ public class AppController {
                 break;
 
             case SuccessfulReturn:
+            case UnsuccessfulReturn:
 
                 state = State.ReturnBooks;
                 break;
