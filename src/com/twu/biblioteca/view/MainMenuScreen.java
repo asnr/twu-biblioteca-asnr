@@ -7,6 +7,7 @@ public class MainMenuScreen implements Screen {
             + "\n"
             + "Main menu:\n"
             + "  (a) List books\n"
+            + "  (b) Return books\n"
             + "  (q) Quit\n"
             + "\n"
             + "Please select an option:\n";

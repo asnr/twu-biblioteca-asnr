@@ -35,8 +35,14 @@ public class Book {
         return yearPublished;
     }
 
-    public void checkout() {
+    public Book checkout() {
         checkedOut = true;
+        return this;
+    }
+
+    public Book checkin() {
+        checkedOut = false;
+        return this;
     }
 
     public boolean isAvailable() {

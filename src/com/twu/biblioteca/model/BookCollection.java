@@ -13,13 +13,23 @@ public class BookCollection {
     }
 
     public Book[] availableBooks() {
-        ArrayList<Book> availableBooks = new ArrayList<Book>();
+        ArrayList<Book> availableBooks = new ArrayList<>();
         for (Book book : books) {
             if (book.isAvailable()) {
                 availableBooks.add(book);
             }
         }
         return availableBooks.toArray(new Book[availableBooks.size()]);
+    }
+
+    public Book[] checkedOutBooks() {
+        ArrayList<Book> checkedOutBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (!book.isAvailable()) {
+                checkedOutBooks.add(book);
+            }
+        }
+        return checkedOutBooks.toArray(new Book[checkedOutBooks.size()]);
     }
 
     public Book getBook(String barcode) throws NoSuchBookException {

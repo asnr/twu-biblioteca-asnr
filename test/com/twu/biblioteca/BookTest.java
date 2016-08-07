@@ -46,6 +46,12 @@ public class BookTest {
         book.checkout();
         assertFalse(book.isAvailable());
     }
-    
+
+    @Test
+    public void returnedBookIsAvailable() {
+        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
+        book.checkout().checkin();
+        assertTrue(book.isAvailable());
+    }
     
 }

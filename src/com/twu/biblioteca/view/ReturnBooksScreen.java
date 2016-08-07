@@ -4,25 +4,26 @@ import com.twu.biblioteca.model.Book;
 
 import java.util.Arrays;
 
-public class ListBooksScreen implements Screen {
+public class ReturnBooksScreen implements Screen {
 
     public final static String screenEnd =
-            "\n\nEnter the barcode of a book and then press Return to check it out, "
-            + "otherwise just press Return to go back to the main menu.\n";
+            "\n\nEnter the barcode of a book and then press Return to return it, "
+                    + "otherwise just press Return to go back to the main menu.\n";
 
     private Book[] books;
 
-    public ListBooksScreen(Book[] books) {
+    public ReturnBooksScreen(Book[] books) {
         this.books = books;
     }
 
+    @Override
     public String printScreen() {
         if (books.length == 0) {
-            return "\nNo books available." + screenEnd;
+            return "\nNo books are currently checked out." + screenEnd;
         }
 
         StringBuilder toPrint = new StringBuilder();
-        toPrint.append("\nAvailable books:");
+        toPrint.append("\nBooks that are currently checked out:");
         for (Book book : books) {
             toPrint.append("\n  ").append(book.toString());
         }
@@ -35,7 +36,7 @@ public class ListBooksScreen implements Screen {
             return false;
         }
 
-        ListBooksScreen screen = (ListBooksScreen) obj;
+        ReturnBooksScreen screen = (ReturnBooksScreen) obj;
         return Arrays.equals(this.books, screen.books);
     }
 }

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class AppControllerTest {
 
+    private Book fstBook;
     private Book[] books;
     private BookCollection emptyCollection;
     private BookCollection oneBookCollection;
@@ -21,8 +22,9 @@ public class AppControllerTest {
 
     @Before
     public void setUp() {
+        this.fstBook = new Book("1a", "The Hitchhiker's Guide To The Galaxy", "Douglas Adams", Year.of(1979));
         this.books = new Book[] {
-                new Book("1a", "The Hitchhiker's Guide To The Galaxy", "Douglas Adams", Year.of(1979)),
+                this.fstBook,
                 new Book("1b", "The Hitchhiker's Guide To The Galaxy", "Douglas Adams", Year.of(1979)),
                 new Book("2", "The Restaurant At The End Of The Universe", "Douglas Adams", Year.of(1980)),
                 new Book("3", "Life, The Universe And Everything", "Douglas Adams", Year.of(1982)),
@@ -31,7 +33,7 @@ public class AppControllerTest {
         };
 
         this.emptyCollection = new BookCollection(new Book[] {});
-        this.oneBookCollection = new BookCollection(new Book[] {books[0]});
+        this.oneBookCollection = new BookCollection(new Book[] {fstBook});
         this.sixBookCollection = new BookCollection(books);
     }
 
@@ -43,10 +45,17 @@ public class AppControllerTest {
     }
 
     @Test
-    public void mainMenuSelectListBooksOption() {
+    public void mainMenuSelectListBooks() {
         AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
         Screen screen = controller.getNextScreen(new String("a"));
         assertEquals(new ListBooksScreen(books), screen);
+    }
+
+    @Test
+    public void mainMenuSelectReturnBooks() {
+        AppController controller = new AppController(oneBookCollection, AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(new String("b"));
+        assertEquals(new ReturnBooksScreen(new Book[] {}), screen);
     }
 
     @Test
@@ -80,17 +89,25 @@ public class AppControllerTest {
     }
 
     @Test
-    public void checkoutAlreadyCheckedOutBookFromListBooks() throws NoSuchBookException {
+    public void checkoutAlreadyCheckedOutBookFromListBooks(){
         AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
-        oneBookCollection.getBook("1a").checkout();
-        Screen screen = controller.getNextScreen("1a");
+        fstBook.checkout();
+        Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
 
     @Test
-    public void checkoutNonexistentBookFromListBooks() throws NoSuchBookException {
+    public void checkoutNonexistentBookFromListBooks() {
         AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("!!");
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
+    }
+
+    @Test
+    public void returnCheckedOutBookFromListBooks() throws NoSuchBookException {
+//        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
+//        fstBook.checkout();
+//        Screen screen = controller.getNextScreen(fstBook.getBarcode());
+//        assertEquals(new ReturnBooksScreen(new Book[] {fstBook}), screen);
     }
 }

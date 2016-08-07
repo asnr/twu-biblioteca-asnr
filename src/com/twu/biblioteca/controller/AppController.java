@@ -5,14 +5,17 @@ import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
 
+import static com.twu.biblioteca.controller.AppController.State.ReturnBooks;
 import static com.twu.biblioteca.controller.AppController.State.SuccessfulCheckout;
 import static com.twu.biblioteca.controller.AppController.State.UnsuccessfulCheckout;
 
 public class AppController {
 
     public enum State {
-        MainMenu, MainMenuInvalidOption, ListBooks, SuccessfulCheckout,
-        UnsuccessfulCheckout, Finished
+        MainMenu, MainMenuInvalidOption,
+        ListBooks, SuccessfulCheckout, UnsuccessfulCheckout,
+        ReturnBooks,
+        Finished
     }
 
     private State state;
@@ -39,6 +42,8 @@ public class AppController {
                 return new SuccessfulCheckoutScreen();
             case UnsuccessfulCheckout:
                 return new UnsuccessfulCheckoutScreen();
+            case ReturnBooks:
+                return new ReturnBooksScreen(collection.checkedOutBooks());
             case Finished:
                 return new QuitScreen();
             default:
@@ -61,6 +66,10 @@ public class AppController {
                 if (input.equals("a")) {
 
                     state = State.ListBooks;
+
+                } else if (input.equals("b")) {
+
+                    state = State.ReturnBooks;
 
                 } else if (input.equals("q")) {
 
@@ -108,6 +117,32 @@ public class AppController {
             case UnsuccessfulCheckout:
 
                 state = State.ListBooks;
+                break;
+
+            case ReturnBooks:
+
+                if (input.equals("")) {
+
+                    state = State.MainMenu;
+
+                } else {
+
+                    Book book;
+                    try {
+                        book = collection.getBook(input);
+                    } catch (NoSuchBookException e) {
+                        book = null;
+                    }
+
+                    if (book != null && !book.isAvailable()) {
+                        book.checkin();
+                        state = ReturnBooks;
+                    } else {
+                        state = ReturnBooks;
+                    }
+
+                }
+
                 break;
 
             case Finished:
