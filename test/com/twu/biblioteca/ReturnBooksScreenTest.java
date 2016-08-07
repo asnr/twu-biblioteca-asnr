@@ -4,6 +4,7 @@ import com.twu.biblioteca.view.ReturnBooksScreen;
 import com.twu.biblioteca.view.QuitScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.model.Book;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Year;
@@ -13,6 +14,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 public class ReturnBooksScreenTest {
+
+    private Book wonderland, glass;
+
+    @Before
+    public void setUp() {
+        this.wonderland = new Book("LC01", "Alice's Adventures in Wonderland",
+                "Lewis Carroll", Year.of(1865));
+        this.glass = new Book("LC02", "Through the Looking-Glass, and What Alice Found There",
+                "Lewis Carroll", Year.of(1871));
+    }
+
     @Test
     public void printScreenNoBooks() {
         Screen screen = new ReturnBooksScreen(new Book[] {});
@@ -22,20 +34,17 @@ public class ReturnBooksScreenTest {
 
     @Test
     public void printScreenOneBook() {
-        Book book = new Book("123", "Foo", "Ms. Bar", Year.of(1999));
-        Screen screen = new ReturnBooksScreen(new Book[] {book});
-        String expected = ReturnBooksScreen.screenStart + "\n  " + book.toString()
-                + ReturnBooksScreen.screenEnd;
+        Screen screen = new ReturnBooksScreen(new Book[] {wonderland});
+        String expected = ReturnBooksScreen.screenStart
+                + "\n  " + wonderland.toString() + ReturnBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
 
     @Test
     public void printScreenTwoBooks() {
-        Book book1 = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        Book book2 = new Book("102", "Bar", "Mr. Foo", Year.of(1600));
-        Screen screen = new ReturnBooksScreen(new Book[] {book1, book2});
+        Screen screen = new ReturnBooksScreen(new Book[] {wonderland, glass});
         String expected = ReturnBooksScreen.screenStart
-                + "\n  " + book1.toString() + "\n  " + book2.toString()
+                + "\n  " + wonderland.toString() + "\n  " + glass.toString()
                 + ReturnBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
@@ -48,10 +57,8 @@ public class ReturnBooksScreenTest {
 
     @Test
     public void differentBooksNotEqual() {
-        Book book1 = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        Book book2 = new Book("102", "Bar", "Mr. Foo", Year.of(1600));
-        ReturnBooksScreen fstScreen = new ReturnBooksScreen(new Book[] {book1});
-        ReturnBooksScreen sndScreen = new ReturnBooksScreen(new Book[] {book2});
+        ReturnBooksScreen fstScreen = new ReturnBooksScreen(new Book[] {wonderland});
+        ReturnBooksScreen sndScreen = new ReturnBooksScreen(new Book[] {glass});
         assertNotEquals(fstScreen, sndScreen);
     }
 
@@ -62,9 +69,8 @@ public class ReturnBooksScreenTest {
 
     @Test
     public void objectsWithTheSameBookAreEqual() {
-        Book book = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        ReturnBooksScreen fstScreen = new ReturnBooksScreen(new Book[] {book});
-        ReturnBooksScreen sndScreen = new ReturnBooksScreen(new Book[] {book});
+        ReturnBooksScreen fstScreen = new ReturnBooksScreen(new Book[] {wonderland});
+        ReturnBooksScreen sndScreen = new ReturnBooksScreen(new Book[] {wonderland});
         assertEquals(fstScreen, sndScreen);
     }
 }

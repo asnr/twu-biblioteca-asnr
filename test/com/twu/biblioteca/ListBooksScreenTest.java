@@ -4,6 +4,7 @@ import com.twu.biblioteca.view.ListBooksScreen;
 import com.twu.biblioteca.view.QuitScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.model.Book;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Year;
@@ -13,6 +14,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 public class ListBooksScreenTest {
+
+    private Book cancer, capricorn;
+
+    @Before
+    public void setUp() {
+        this.cancer = new Book("HM01", "The Tropic of Cancer",
+                "Henry Miller", Year.of(1934));
+        this.capricorn = new Book("HM02", "The Tropic of Capricorn",
+                "Henry Miller", Year.of(1938));
+    }
+
     @Test
     public void printScreenNoBooks() {
         Screen screen = new ListBooksScreen(new Book[] {});
@@ -22,20 +34,17 @@ public class ListBooksScreenTest {
 
     @Test
     public void printScreenOneBook() {
-        Book book = new Book("123", "Foo", "Ms. Bar", Year.of(1999));
-        Screen screen = new ListBooksScreen(new Book[] {book});
-        String expected = ListBooksScreen.screenStart + "\n  " + book.toString()
+        Screen screen = new ListBooksScreen(new Book[] {cancer});
+        String expected = ListBooksScreen.screenStart + "\n  " + cancer.toString()
                 + ListBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
 
     @Test
     public void printScreenTwoBooks() {
-        Book book1 = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        Book book2 = new Book("102", "Bar", "Mr. Foo", Year.of(1600));
-        Screen screen = new ListBooksScreen(new Book[] {book1, book2});
+        Screen screen = new ListBooksScreen(new Book[] {cancer, capricorn});
         String expected = ListBooksScreen.screenStart
-                + "\n  " + book1.toString() + "\n  " + book2.toString()
+                + "\n  " + cancer.toString() + "\n  " + capricorn.toString()
                 + ListBooksScreen.screenEnd;
         assertEquals(expected, screen.printScreen());
     }
@@ -48,10 +57,8 @@ public class ListBooksScreenTest {
 
     @Test
     public void differentBooksNotEqual() {
-        Book book1 = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        Book book2 = new Book("102", "Bar", "Mr. Foo", Year.of(1600));
-        ListBooksScreen fstScreen = new ListBooksScreen(new Book[] {book1});
-        ListBooksScreen sndScreen = new ListBooksScreen(new Book[] {book2});
+        ListBooksScreen fstScreen = new ListBooksScreen(new Book[] {cancer});
+        ListBooksScreen sndScreen = new ListBooksScreen(new Book[] {capricorn});
         assertNotEquals(fstScreen, sndScreen);
     }
 
@@ -62,9 +69,8 @@ public class ListBooksScreenTest {
 
     @Test
     public void objectsWithTheSameBookAreEqual() {
-        Book book = new Book("101", "Foo", "Ms. Bar", Year.of(1500));
-        ListBooksScreen fstScreen = new ListBooksScreen(new Book[] {book});
-        ListBooksScreen sndScreen = new ListBooksScreen(new Book[] {book});
+        ListBooksScreen fstScreen = new ListBooksScreen(new Book[] {cancer});
+        ListBooksScreen sndScreen = new ListBooksScreen(new Book[] {cancer});
         assertEquals(fstScreen, sndScreen);
     }
 }

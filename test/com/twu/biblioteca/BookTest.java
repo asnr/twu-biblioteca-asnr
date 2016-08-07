@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
 import com.twu.biblioteca.model.Book;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Year;
@@ -10,48 +11,50 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BookTest {
+
+    private Book catch22;
+
+    @Before
+    public void setUp() {
+        this.catch22 = new Book("0000", "Catch-22", "Joseph Heller", Year.of(1961));
+    }
+
     @Test
     public void getBarCode() {
-        Book book = new Book("123", "A book", "An Author", Year.of(2000));
-        assertEquals("123", book.getBarcode());
+        assertEquals("0000", catch22.getBarcode());
     }
 
     @Test
     public void getBookTitle() {
-        Book book = new Book("456", "A book title", "Foo Bar", Year.of(2000));
-        assertEquals("A book title", book.getTitle());
+        assertEquals("Catch-22", catch22.getTitle());
     }
 
     @Test
     public void getBookAuthor() {
-        Book book = new Book("789", "Another title", "Bar Foo", Year.of(2000));
-        assertEquals("Bar Foo", book.getAuthor());
+        assertEquals("Joseph Heller", catch22.getAuthor());
     }
 
     @Test
     public void toStringCatch22() {
-        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
-        assertEquals("[123] Catch-22 by Joseph Heller published 1961", book.toString());
+        assertEquals("[0000] Catch-22 by Joseph Heller published 1961",
+                catch22.toString());
     }
 
     @Test
     public void newBookIsAvailable() {
-        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
-        assertTrue(book.isAvailable());
+        assertTrue(catch22.isAvailable());
     }
 
     @Test
     public void checkedOutBookIsNotAvailable() {
-        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
-        book.checkout();
-        assertFalse(book.isAvailable());
+        catch22.checkout();
+        assertFalse(catch22.isAvailable());
     }
 
     @Test
     public void returnedBookIsAvailable() {
-        Book book = new Book("123", "Catch-22", "Joseph Heller", Year.of(1961));
-        book.checkout().checkin();
-        assertTrue(book.isAvailable());
+        catch22.checkout().checkin();
+        assertTrue(catch22.isAvailable());
     }
     
 }
