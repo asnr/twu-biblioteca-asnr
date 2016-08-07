@@ -46,22 +46,27 @@ public class AppControllerTest {
 
     @Test
     public void mainMenuSelectListBooks() {
-        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
-        Screen screen = controller.getNextScreen(new String("a"));
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(
+                new String(MainMenuScreen.ListBooksOption));
         assertEquals(new ListBooksScreen(books), screen);
     }
 
     @Test
     public void mainMenuSelectReturnBooks() {
-        AppController controller = new AppController(oneBookCollection, AppController.State.MainMenu);
-        Screen screen = controller.getNextScreen(new String("b"));
+        AppController controller = new AppController(oneBookCollection,
+                AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(
+                new String(MainMenuScreen.ReturnBooksOption));
         assertEquals(new ReturnBooksScreen(new Book[] {}), screen);
     }
 
     @Test
     public void mainMenuSelectIncorrectInput() {
-        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
-        Screen screen = controller.getNextScreen("!!");
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen("!!!");
         assertEquals(new InvalidOptionScreen(), screen);
         screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
@@ -69,28 +74,33 @@ public class AppControllerTest {
 
     @Test
     public void mainMenuSelectQuit() {
-        AppController controller = new AppController(sixBookCollection, AppController.State.MainMenu);
-        Screen screen = controller.getNextScreen("q");
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(
+                new String(MainMenuScreen.QuitOption));
         assertEquals(new QuitScreen(), screen);
     }
 
     @Test
     public void listBooksReturnsToMainMenuOnEmptyInput() {
-        AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
     }
 
     @Test
     public void correctlyCheckoutBookFromListBooks() {
-        AppController controller = new AppController(sixBookCollection, AppController.State.ListBooks);
+        AppController controller = new AppController(sixBookCollection,
+                AppController.State.ListBooks);
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulCheckoutScreen(), screen);
     }
 
     @Test
     public void checkoutAlreadyCheckedOutBookFromListBooks(){
-        AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
+        AppController controller = new AppController(oneBookCollection,
+                AppController.State.ListBooks);
         fstBook.checkout();
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
@@ -98,14 +108,16 @@ public class AppControllerTest {
 
     @Test
     public void checkoutNonexistentBookFromListBooks() {
-        AppController controller = new AppController(oneBookCollection, AppController.State.ListBooks);
+        AppController controller = new AppController(oneBookCollection,
+                AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
 
     @Test
     public void returnCheckedOutBookFromReturnBooks() throws NoSuchBookException {
-        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
+        AppController controller = new AppController(oneBookCollection,
+                AppController.State.ReturnBooks);
         fstBook.checkout();
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulReturnScreen(), screen);
@@ -113,14 +125,16 @@ public class AppControllerTest {
 
     @Test
     public void returnNonexistentBookFromReturnBooks() {
-        AppController controller = new AppController(emptyCollection, AppController.State.ReturnBooks);
+        AppController controller = new AppController(emptyCollection,
+                AppController.State.ReturnBooks);
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulReturnScreen(), screen);
     }
 
     @Test
     public void returnAvailableBookFromReturnBooks() {
-        AppController controller = new AppController(oneBookCollection, AppController.State.ReturnBooks);
+        AppController controller = new AppController(oneBookCollection,
+                AppController.State.ReturnBooks);
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new UnsuccessfulReturnScreen(), screen);
     }

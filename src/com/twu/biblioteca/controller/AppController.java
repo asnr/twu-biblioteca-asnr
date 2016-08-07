@@ -65,15 +65,15 @@ public class AppController {
         switch (state) {
             case MainMenu:
 
-                if (input.equals("a")) {
+                if (input.equals(MainMenuScreen.ListBooksOption)) {
 
                     state = State.ListBooks;
 
-                } else if (input.equals("b")) {
+                } else if (input.equals(MainMenuScreen.ReturnBooksOption)) {
 
                     state = State.ReturnBooks;
 
-                } else if (input.equals("q")) {
+                } else if (input.equals(MainMenuScreen.QuitOption)) {
 
                     state = State.Finished;
 

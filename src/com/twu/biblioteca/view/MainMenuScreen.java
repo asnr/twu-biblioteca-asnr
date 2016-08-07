@@ -2,7 +2,12 @@ package com.twu.biblioteca.view;
 
 
 public class MainMenuScreen implements Screen {
-    private String screen = "\n"
+
+    public final static String ListBooksOption = "a";
+    public final static String ReturnBooksOption = "b";
+    public final static String QuitOption = "q";
+
+    private final String screen = "\n"
             +"Welcome to Biblioteca.\n"
             + "\n"
             + "Main menu:\n"
