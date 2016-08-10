@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
 import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.model.Movie;
 import com.twu.biblioteca.view.QuitScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.model.Book;
@@ -19,8 +20,12 @@ public class BibliotecaApp {
                 new Book("2", "Don't Make Me Think", "Steve Krug", Year.of(2000))
         };
 
+        Movie[] movies = {
+                new Movie("M001", "A Movie", "A Director", Year.of(1978), 1)
+        };
+
         BookCollection collection = new BookCollection(books);
-        AppController controller = new AppController(collection);
+        AppController controller = new AppController(collection, movies);
 
         Scanner consoleInput = new Scanner(System.in);
 

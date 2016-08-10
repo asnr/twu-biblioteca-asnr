@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
 import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.model.Movie;
 import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.Book;
@@ -11,14 +12,19 @@ import org.junit.Test;
 import java.time.Year;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AppControllerTest {
 
     private Book fstBook;
     private Book[] books;
-    private BookCollection emptyCollection;
+    private BookCollection emptyBookCollection;
     private BookCollection oneBookCollection;
     private BookCollection sixBookCollection;
+
+    private Movie fstMovie;
+    private Movie[] emptyMovieCollection;
+    private Movie[] singleMovieCollection;
 
     @Before
     public void setUp() {
@@ -32,21 +38,27 @@ public class AppControllerTest {
                 new Book("5", "Mostly Harmless", "Douglas Adams", Year.of(1992))
         };
 
-        this.emptyCollection = new BookCollection(new Book[] {});
+        this.emptyBookCollection = new BookCollection(new Book[] {});
         this.oneBookCollection = new BookCollection(new Book[] {fstBook});
         this.sixBookCollection = new BookCollection(books);
+
+        this.fstMovie = new Movie("M001", "A Movie", "A Director", Year.of(1978), 1);
+        this.emptyMovieCollection = new Movie[] {};
+        this.singleMovieCollection = new Movie[] {fstMovie};
     }
 
     @Test
     public void defaultStartScreenIsMainMenu() {
-        AppController controller = new AppController(emptyCollection);
+        AppController controller = new AppController(
+                emptyBookCollection, emptyMovieCollection);
         Screen screen = controller.getCurrentScreen();
         assertEquals(new MainMenuScreen(), screen);
     }
 
     @Test
     public void mainMenuSelectListBooks() {
-        AppController controller = new AppController(sixBookCollection,
+        AppController controller = new AppController(
+                sixBookCollection, emptyMovieCollection,
                 AppController.State.MainMenu);
         Screen screen = controller.getNextScreen(
                 new String(MainMenuScreen.ListBooksOption));
@@ -55,7 +67,8 @@ public class AppControllerTest {
 
     @Test
     public void mainMenuSelectReturnBooks() {
-        AppController controller = new AppController(oneBookCollection,
+        AppController controller = new AppController(
+                oneBookCollection, emptyMovieCollection,
                 AppController.State.MainMenu);
         Screen screen = controller.getNextScreen(
                 new String(MainMenuScreen.ReturnBooksOption));
@@ -63,9 +76,19 @@ public class AppControllerTest {
     }
 
     @Test
+    public void mainMenuSelectListMovies() {
+        AppController controller = new AppController(
+                emptyBookCollection, emptyMovieCollection,
+                AppController.State.MainMenu);
+        Screen screen = controller.getNextScreen(
+                new String(MainMenuScreen.ListMoviesOption));
+        assertEquals(new ListMoviesScreen(new Movie[] {}), screen);
+    }
+
+    @Test
     public void mainMenuSelectIncorrectInput() {
         AppController controller = new AppController(sixBookCollection,
-                AppController.State.MainMenu);
+                emptyMovieCollection, AppController.State.MainMenu);
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new InvalidOptionScreen(), screen);
         screen = controller.getNextScreen("");
@@ -75,7 +98,7 @@ public class AppControllerTest {
     @Test
     public void mainMenuSelectQuit() {
         AppController controller = new AppController(sixBookCollection,
-                AppController.State.MainMenu);
+                emptyMovieCollection, AppController.State.MainMenu);
         Screen screen = controller.getNextScreen(
                 new String(MainMenuScreen.QuitOption));
         assertEquals(new QuitScreen(), screen);
@@ -84,7 +107,7 @@ public class AppControllerTest {
     @Test
     public void listBooksReturnsToMainMenuOnEmptyInput() {
         AppController controller = new AppController(sixBookCollection,
-                AppController.State.ListBooks);
+                emptyMovieCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
     }
@@ -92,7 +115,7 @@ public class AppControllerTest {
     @Test
     public void correctlyCheckoutBookFromListBooks() {
         AppController controller = new AppController(sixBookCollection,
-                AppController.State.ListBooks);
+                emptyMovieCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulCheckoutScreen(), screen);
     }
@@ -100,7 +123,7 @@ public class AppControllerTest {
     @Test
     public void checkoutAlreadyCheckedOutBookFromListBooks(){
         AppController controller = new AppController(oneBookCollection,
-                AppController.State.ListBooks);
+                emptyMovieCollection, AppController.State.ListBooks);
         fstBook.checkout();
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
@@ -109,7 +132,7 @@ public class AppControllerTest {
     @Test
     public void checkoutNonexistentBookFromListBooks() {
         AppController controller = new AppController(oneBookCollection,
-                AppController.State.ListBooks);
+                emptyMovieCollection, AppController.State.ListBooks);
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
@@ -117,7 +140,7 @@ public class AppControllerTest {
     @Test
     public void returnBooksReturnsToMainMenuOnEmptyInput() {
         AppController controller = new AppController(sixBookCollection,
-                AppController.State.ReturnBooks);
+                emptyMovieCollection, AppController.State.ReturnBooks);
         Screen screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
     }
@@ -125,7 +148,7 @@ public class AppControllerTest {
     @Test
     public void returnCheckedOutBookFromReturnBooks() throws NoSuchBookException {
         AppController controller = new AppController(oneBookCollection,
-                AppController.State.ReturnBooks);
+                emptyMovieCollection, AppController.State.ReturnBooks);
         fstBook.checkout();
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new SuccessfulReturnScreen(), screen);
@@ -133,8 +156,8 @@ public class AppControllerTest {
 
     @Test
     public void returnNonexistentBookFromReturnBooks() {
-        AppController controller = new AppController(emptyCollection,
-                AppController.State.ReturnBooks);
+        AppController controller = new AppController(emptyBookCollection,
+                emptyMovieCollection, AppController.State.ReturnBooks);
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulReturnScreen(), screen);
     }
@@ -142,8 +165,16 @@ public class AppControllerTest {
     @Test
     public void returnAvailableBookFromReturnBooks() {
         AppController controller = new AppController(oneBookCollection,
-                AppController.State.ReturnBooks);
+                emptyMovieCollection, AppController.State.ReturnBooks);
         Screen screen = controller.getNextScreen(fstBook.getBarcode());
         assertEquals(new UnsuccessfulReturnScreen(), screen);
+    }
+
+    @Test
+    public void listMoviesReturnToMainMenuOnEmptyInput() {
+        AppController controller = new AppController(emptyBookCollection,
+                emptyMovieCollection, AppController.State.ListMovies);
+        Screen screen = controller.getNextScreen("");
+        assertEquals(new MainMenuScreen(), screen);
     }
 }

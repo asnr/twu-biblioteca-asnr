@@ -1,6 +1,7 @@
 package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.model.Book;
+import com.twu.biblioteca.model.Movie;
 import com.twu.biblioteca.model.NoSuchBookException;
 import com.twu.biblioteca.view.*;
 import com.twu.biblioteca.model.BookCollection;
@@ -13,22 +14,24 @@ public class AppController {
         MainMenu, MainMenuInvalidOption,
         ListBooks, SuccessfulCheckout, UnsuccessfulCheckout,
         ReturnBooks, SuccessfulReturn, UnsuccessfulReturn,
+        ListMovies,
         Finished
     }
 
 
     private State state;
-    private BookCollection collection;
+    private BookCollection books;
+    private Movie[] movies;
 
 
-    public AppController(BookCollection collection) {
-        this(collection, State.MainMenu);
+    public AppController(BookCollection books, Movie[] movies) {
+        this(books, movies, State.MainMenu);
     }
 
-
-    public AppController(BookCollection collection, State startState) {
+    public AppController(BookCollection books, Movie[] movies, State startState) {
         this.state = startState;
-        this.collection = collection;
+        this.books = books;
+        this.movies = movies;
     }
 
 
@@ -39,17 +42,19 @@ public class AppController {
             case MainMenuInvalidOption:
                 return new InvalidOptionScreen();
             case ListBooks:
-                return new ListBooksScreen(collection.availableBooks());
+                return new ListBooksScreen(books.availableBooks());
             case SuccessfulCheckout:
                 return new SuccessfulCheckoutScreen();
             case UnsuccessfulCheckout:
                 return new UnsuccessfulCheckoutScreen();
             case ReturnBooks:
-                return new ReturnBooksScreen(collection.checkedOutBooks());
+                return new ReturnBooksScreen(books.checkedOutBooks());
             case SuccessfulReturn:
                 return new SuccessfulReturnScreen();
             case UnsuccessfulReturn:
                 return new UnsuccessfulReturnScreen();
+            case ListMovies:
+                return new ListMoviesScreen(movies);
             case Finished:
                 return new QuitScreen();
             default:
@@ -101,6 +106,11 @@ public class AppController {
                 state = State.ReturnBooks;
                 break;
 
+            case ListMovies:
+
+                state = updateListMoviesState(input);
+                break;
+
             case Finished:
 
                 break;
@@ -122,6 +132,10 @@ public class AppController {
 
             return State.ReturnBooks;
 
+        } else if (input.equals(MainMenuScreen.ListMoviesOption)) {
+
+            return State.ListMovies;
+
         } else if (input.equals(MainMenuScreen.QuitOption)) {
 
             return State.Finished;
@@ -142,7 +156,7 @@ public class AppController {
         State newState;
         Book book;
         try {
-            book = collection.getBook(input);
+            book = books.getBook(input);
         } catch (NoSuchBookException e) {
             book = null;
         }
@@ -167,7 +181,7 @@ public class AppController {
         State newState;
         Book book;
         try {
-            book = collection.getBook(input);
+            book = books.getBook(input);
         } catch (NoSuchBookException e) {
             book = null;
         }
@@ -180,5 +194,9 @@ public class AppController {
         }
 
         return newState;
+    }
+
+    private State updateListMoviesState(String input) {
+        return State.MainMenu;
     }
 }
