@@ -11,15 +11,13 @@ public class Movie {
     private Year releaseYear;
     private int rating;
 
+    private boolean checkedOut;
+
     private static final int NOT_RATED = -1;
 
     public Movie(String barcode, String title, String director,
                  Year releaseYear) {
-        this.barcode = barcode;
-        this.title = title;
-        this.director = director;
-        this.releaseYear = releaseYear;
-        this.rating = NOT_RATED;
+        this(barcode, title, director, releaseYear, NOT_RATED);
     }
 
     public Movie(String barcode, String title, String director,
@@ -29,6 +27,11 @@ public class Movie {
         this.director = director;
         this.releaseYear = releaseYear;
         this.rating = rating;
+        this.checkedOut = false;
+    }
+
+    public String getBarcode() {
+        return barcode;
     }
 
     @Override
@@ -46,6 +49,15 @@ public class Movie {
         }
 
         return str.toString();
+    }
+
+    public boolean isAvailable() {
+        return !checkedOut;
+    }
+
+    public Movie checkout() {
+        checkedOut = true;
+        return this;
     }
 
 }

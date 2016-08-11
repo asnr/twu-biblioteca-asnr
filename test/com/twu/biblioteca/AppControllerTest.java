@@ -1,11 +1,8 @@
 package com.twu.biblioteca;
 
 import com.twu.biblioteca.controller.AppController;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.NoSuchBookException;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.*;
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,8 +20,8 @@ public class AppControllerTest {
     private BookCollection sixBookCollection;
 
     private Movie fstMovie;
-    private Movie[] emptyMovieCollection;
-    private Movie[] singleMovieCollection;
+    private MovieCollection emptyMovieCollection;
+    private MovieCollection singleMovieCollection;
 
     @Before
     public void setUp() {
@@ -43,8 +40,8 @@ public class AppControllerTest {
         this.sixBookCollection = new BookCollection(books);
 
         this.fstMovie = new Movie("M001", "A Movie", "A Director", Year.of(1978), 1);
-        this.emptyMovieCollection = new Movie[] {};
-        this.singleMovieCollection = new Movie[] {fstMovie};
+        this.emptyMovieCollection = new MovieCollection(new Movie[] {});
+        this.singleMovieCollection = new MovieCollection(new Movie[] {fstMovie});
     }
 
     @Test
@@ -176,5 +173,32 @@ public class AppControllerTest {
                 emptyMovieCollection, AppController.State.ListMovies);
         Screen screen = controller.getNextScreen("");
         assertEquals(new MainMenuScreen(), screen);
+    }
+
+    @Test
+    public void correctlyCheckoutMovieFromListMovies() {
+        AppController controller = new AppController(emptyBookCollection,
+                singleMovieCollection, AppController.State.ListMovies);
+        Screen screen = controller.getNextScreen(fstMovie.getBarcode());
+        assertEquals(new SuccessfulMovieCheckoutScreen(), screen);
+        screen = controller.getNextScreen("");
+        assertEquals(new ListMoviesScreen(new Movie[] {}), screen);
+    }
+
+    @Test
+    public void checkoutNonexistentMovieFailsStaysInListMovies() {
+        AppController controller = new AppController(emptyBookCollection,
+                singleMovieCollection, AppController.State.ListMovies);
+        Screen screen = controller.getNextScreen("!!!");
+        assertEquals(new ListMoviesScreen(new Movie[] {fstMovie}), screen);
+    }
+
+    @Test
+    public void checkoutAlreadyCheckedOutMovieFailsStaysInListMovies() {
+        AppController controller = new AppController(emptyBookCollection,
+                singleMovieCollection, AppController.State.ListMovies);
+        fstMovie.checkout();
+        Screen screen = controller.getNextScreen(fstMovie.getBarcode());
+        assertEquals(new ListMoviesScreen(new Movie[] {}), screen);
     }
 }

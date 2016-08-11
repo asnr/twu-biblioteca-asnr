@@ -1,10 +1,7 @@
 package com.twu.biblioteca.controller;
 
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.NoSuchBookException;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.*;
-import com.twu.biblioteca.model.BookCollection;
 
 import static com.twu.biblioteca.controller.AppController.State.*;
 
@@ -12,23 +9,23 @@ public class AppController {
 
     public enum State {
         MainMenu, MainMenuInvalidOption,
-        ListBooks, SuccessfulCheckout, UnsuccessfulCheckout,
+        ListBooks, SuccessfulBookCheckout, UnsuccessfulBookCheckout,
         ReturnBooks, SuccessfulReturn, UnsuccessfulReturn,
-        ListMovies,
+        ListMovies, SuccessfulMovieCheckout,
         Finished
     }
 
 
     private State state;
     private BookCollection books;
-    private Movie[] movies;
+    private MovieCollection movies;
 
 
-    public AppController(BookCollection books, Movie[] movies) {
+    public AppController(BookCollection books, MovieCollection movies) {
         this(books, movies, State.MainMenu);
     }
 
-    public AppController(BookCollection books, Movie[] movies, State startState) {
+    public AppController(BookCollection books, MovieCollection movies, State startState) {
         this.state = startState;
         this.books = books;
         this.movies = movies;
@@ -43,9 +40,9 @@ public class AppController {
                 return new InvalidOptionScreen();
             case ListBooks:
                 return new ListBooksScreen(books.availableBooks());
-            case SuccessfulCheckout:
+            case SuccessfulBookCheckout:
                 return new SuccessfulCheckoutScreen();
-            case UnsuccessfulCheckout:
+            case UnsuccessfulBookCheckout:
                 return new UnsuccessfulCheckoutScreen();
             case ReturnBooks:
                 return new ReturnBooksScreen(books.checkedOutBooks());
@@ -54,7 +51,9 @@ public class AppController {
             case UnsuccessfulReturn:
                 return new UnsuccessfulReturnScreen();
             case ListMovies:
-                return new ListMoviesScreen(movies);
+                return new ListMoviesScreen(movies.availableMovies());
+            case SuccessfulMovieCheckout:
+                return new SuccessfulMovieCheckoutScreen();
             case Finished:
                 return new QuitScreen();
             default:
@@ -89,8 +88,8 @@ public class AppController {
                 state = updateListBooksState(input);
                 break;
 
-            case SuccessfulCheckout:
-            case UnsuccessfulCheckout:
+            case SuccessfulBookCheckout:
+            case UnsuccessfulBookCheckout:
 
                 state = State.ListBooks;
                 break;
@@ -110,6 +109,10 @@ public class AppController {
 
                 state = updateListMoviesState(input);
                 break;
+
+            case SuccessfulMovieCheckout:
+
+                state = State.ListMovies;
 
             case Finished:
 
@@ -163,9 +166,9 @@ public class AppController {
 
         if (book != null && book.isAvailable()) {
             book.checkout();
-            newState = SuccessfulCheckout;
+            newState = SuccessfulBookCheckout;
         } else {
-            newState = UnsuccessfulCheckout;
+            newState = UnsuccessfulBookCheckout;
         }
 
         return newState;
@@ -197,6 +200,26 @@ public class AppController {
     }
 
     private State updateListMoviesState(String input) {
-        return State.MainMenu;
+
+        if (input.equals("")) {
+            return State.MainMenu;
+        }
+
+        Movie movie;
+        try {
+            movie = movies.getMovie(input);
+        } catch(NoSuchMovieException e) {
+            movie = null;
+        }
+
+        State nextState;
+        if (movie != null && movie.isAvailable()) {
+            movie.checkout();
+            nextState = State.SuccessfulMovieCheckout;
+        } else {
+            nextState = State.ListMovies;
+        }
+
+        return nextState;
     }
 }

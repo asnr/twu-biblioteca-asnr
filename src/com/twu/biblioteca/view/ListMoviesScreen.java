@@ -9,7 +9,8 @@ public class ListMoviesScreen implements Screen {
 
     public static final String screenStart = "\nAvailable movies:\n";
     public static final String screenEnd =
-            "\n\nPress Return to go back to the main menu.\n";
+            "\n\nEnter the barcode of a book and then press Return to check it out, "
+            + "otherwise just press Return to go back to the main menu.\n";
 
     public static final String noMoviesMsg = "\nNo movies available. "
             + "Press Return to go back to the main menu.\n";
