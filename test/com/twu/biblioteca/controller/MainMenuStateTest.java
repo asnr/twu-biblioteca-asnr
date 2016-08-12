@@ -1,4 +1,4 @@
-package com.twu.biblioteca;
+package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.controller.*;
 import com.twu.biblioteca.model.Book;

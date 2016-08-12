@@ -1,4 +1,4 @@
-package com.twu.biblioteca;
+package com.twu.biblioteca.model;
 
 import com.twu.biblioteca.model.Movie;
 import org.junit.Before;
