@@ -4,10 +4,7 @@ package com.twu.biblioteca.controller;
 import com.twu.biblioteca.controller.AppState;
 import com.twu.biblioteca.controller.BorrowBookState;
 import com.twu.biblioteca.controller.MainMenuState;
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.MovieCollection;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.ListBooksScreen;
 import com.twu.biblioteca.view.SuccessfulCheckoutScreen;
 import com.twu.biblioteca.view.UnsuccessfulCheckoutScreen;
@@ -18,6 +15,9 @@ import java.time.Year;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BorrowBookStateTest {
 
@@ -56,7 +56,28 @@ public class BorrowBookStateTest {
                 singleBookCollection, emptyMovieCollection);
         state = state.nextState(fstBook.getBarcode());
         assertEquals(new SuccessfulCheckoutScreen(), state.getScreen());
-        state = state.nextState("");
+    }
+
+    @Test
+    public void checkingOutABookCallsCheckout() throws NoSuchBookException {
+        String mockBarcode = "001";
+
+        Book mockedBook = mock(Book.class);
+        when(mockedBook.isAvailable()).thenReturn(true);
+
+        BookCollection mockedBooks = mock(BookCollection.class);
+        when(mockedBooks.getBook(mockBarcode)).thenReturn(mockedBook);
+
+        AppState state = new BorrowBookState(mockedBooks, emptyMovieCollection);
+        state.nextState(mockBarcode);
+        verify(mockedBook).checkout();
+    }
+
+    @Test
+    public void successfulCheckoutScreenGoesToListBooks() {
+        AppState state = new BorrowBookState(
+                singleBookCollection, emptyMovieCollection);
+        state = state.nextState(fstBook.getBarcode()).nextState("");
         assertEquals(new ListBooksScreen(new Book[] {}), state.getScreen());
     }
 
