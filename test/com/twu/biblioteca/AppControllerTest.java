@@ -45,10 +45,38 @@ public class AppControllerTest {
     }
 
     @Test
-    public void defaultStartScreenIsMainMenu() {
+    public void defaultStartScreenIsEnterUsernameScreen() {
         AppController controller = new AppController(
                 emptyBookCollection, emptyMovieCollection);
         Screen screen = controller.getCurrentScreen();
+        assertEquals(new EnterUsernameScreen(), screen);
+    }
+
+    @Test
+    public void enterUsernameScreenGoesToEnterPasswordScreen() {
+        AppController controller = new AppController(emptyBookCollection,
+                emptyMovieCollection, AppController.State.Login);
+        Screen screen = controller.getNextScreen("Foo");
+        assertEquals(new EnterPasswordScreen(), screen);
+    }
+
+    @Test
+    public void unsuccessfulLoginGoesToUnsuccessfulLoginScreenToEnterUsername() {
+        AppController controller = new AppController(emptyBookCollection,
+                emptyMovieCollection, AppController.State.Login);
+        controller.getNextScreen("Some user");
+        Screen screen = controller.getNextScreen("Incorrect password");
+        assertEquals(new UnsuccessfulLoginScreen(), screen);
+        screen = controller.getNextScreen("");
+        assertEquals(new EnterUsernameScreen(), screen);
+    }
+
+    @Test
+    public void successfulLoginGoesToMainMenuScreen() {
+        AppController controller = new AppController(emptyBookCollection,
+                emptyMovieCollection, AppController.State.Login);
+        controller.getNextScreen("admin");
+        Screen screen = controller.getNextScreen("password");
         assertEquals(new MainMenuScreen(), screen);
     }
 
@@ -133,6 +161,9 @@ public class AppControllerTest {
         Screen screen = controller.getNextScreen("!!!");
         assertEquals(new UnsuccessfulCheckoutScreen(), screen);
     }
+
+    // TODO return books only lists books that are held by the logged in user
+    // TODO user cannot return book held by another user
 
     @Test
     public void returnBooksReturnsToMainMenuOnEmptyInput() {

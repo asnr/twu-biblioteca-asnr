@@ -8,6 +8,7 @@ import static com.twu.biblioteca.controller.AppController.State.*;
 public class AppController {
 
     public enum State {
+        Login,
         MainMenu, MainMenuInvalidOption,
         ListBooks, SuccessfulBookCheckout, UnsuccessfulBookCheckout,
         ReturnBooks, SuccessfulReturn, UnsuccessfulReturn,
@@ -20,44 +21,43 @@ public class AppController {
     private BookCollection books;
     private MovieCollection movies;
 
+    private AppState appState;
 
     public AppController(BookCollection books, MovieCollection movies) {
-        this(books, movies, State.MainMenu);
+        this(books, movies, State.Login);
     }
 
     public AppController(BookCollection books, MovieCollection movies, State startState) {
         this.state = startState;
         this.books = books;
         this.movies = movies;
+
+
     }
 
 
     public Screen getCurrentScreen() {
         switch (state) {
+            case Login:
+                // This is only here because login is the default start screen
+                if (appState == null) {
+                    appState = new LoginState(books, movies);
+                }
+                return appState.getScreen();
             case MainMenu:
                 return new MainMenuScreen();
             case MainMenuInvalidOption:
                 return new InvalidOptionScreen();
             case ListBooks:
-                return new ListBooksScreen(books.availableBooks());
-            case SuccessfulBookCheckout:
-                return new SuccessfulCheckoutScreen();
-            case UnsuccessfulBookCheckout:
-                return new UnsuccessfulCheckoutScreen();
+                return appState.getScreen();
             case ReturnBooks:
-                return new ReturnBooksScreen(books.checkedOutBooks());
-            case SuccessfulReturn:
-                return new SuccessfulReturnScreen();
-            case UnsuccessfulReturn:
-                return new UnsuccessfulReturnScreen();
+                return appState.getScreen();
             case ListMovies:
-                return new ListMoviesScreen(movies.availableMovies());
-            case SuccessfulMovieCheckout:
-                return new SuccessfulMovieCheckoutScreen();
+                return appState.getScreen();
             case Finished:
-                return new QuitScreen();
+                return appState.getScreen();
             default:
-                return new MainMenuScreen();
+                return null;
         }
     }
 
@@ -73,9 +73,31 @@ public class AppController {
     private void updateState(String input) {
 
         switch (state) {
+            case Login:
+                if (appState == null) {
+                    appState = new LoginState(books, movies);
+                }
+
+                appState = appState.nextState(input);
+                if (appState instanceof MainMenuState) {
+                    state = State.MainMenu;
+                }
+                break;
+
             case MainMenu:
 
                 state = updateMainMenuState(input);
+
+                if (state == ListBooks) {
+                    appState = new BorrowBookState(books, movies);
+                } else if (state == ReturnBooks) {
+                    appState = new ReturnBookState(books, movies);
+                } else if (state == ListMovies) {
+                    appState = new BorrowMovieState(books, movies);
+                } else if (state == Finished) {
+                    appState = new QuitState(books, movies);
+                }
+
                 break;
 
             case MainMenuInvalidOption:
@@ -84,38 +106,48 @@ public class AppController {
                 break;
 
             case ListBooks:
+                if (appState == null) {
+                    appState = new BorrowBookState(books, movies);
+                }
 
-                state = updateListBooksState(input);
-                break;
-
-            case SuccessfulBookCheckout:
-            case UnsuccessfulBookCheckout:
-
-                state = State.ListBooks;
+                appState = appState.nextState(input);
+                if (appState instanceof MainMenuState) {
+                    appState = null;
+                    state = State.MainMenu;
+                }
                 break;
 
             case ReturnBooks:
+                if (appState == null) {
+                    appState = new ReturnBookState(books, movies);
+                }
 
-                state = updateReturnBooksState(input);
-                break;
-
-            case SuccessfulReturn:
-            case UnsuccessfulReturn:
-
-                state = State.ReturnBooks;
+                appState = appState.nextState(input);
+                if (appState instanceof MainMenuState) {
+                    appState = null;
+                    state = State.MainMenu;
+                }
                 break;
 
             case ListMovies:
+                if (appState == null) {
+                    appState = new BorrowMovieState(books, movies);
+                }
 
-                state = updateListMoviesState(input);
+                appState = appState.nextState(input);
+                if (appState instanceof MainMenuState) {
+                    appState = null;
+                    state = State.MainMenu;
+                }
                 break;
-
-            case SuccessfulMovieCheckout:
-
-                state = State.ListMovies;
 
             case Finished:
 
+                if (appState == null) {
+                    appState = new QuitState(books, movies);
+                }
+
+                appState = appState.nextState(input);
                 break;
 
             default:
@@ -147,79 +179,5 @@ public class AppController {
 
             return State.MainMenuInvalidOption;
         }
-    }
-
-
-    private State updateListBooksState(String input) {
-
-        if (input.equals("")) {
-            return State.MainMenu;
-        }
-
-        State newState;
-        Book book;
-        try {
-            book = books.getBook(input);
-        } catch (NoSuchBookException e) {
-            book = null;
-        }
-
-        if (book != null && book.isAvailable()) {
-            book.checkout();
-            newState = SuccessfulBookCheckout;
-        } else {
-            newState = UnsuccessfulBookCheckout;
-        }
-
-        return newState;
-    }
-
-
-    private State updateReturnBooksState(String input) {
-
-        if (input.equals("")) {
-            return State.MainMenu;
-        }
-
-        State newState;
-        Book book;
-        try {
-            book = books.getBook(input);
-        } catch (NoSuchBookException e) {
-            book = null;
-        }
-
-        if (book != null && !book.isAvailable()) {
-            book.checkin();
-            newState = SuccessfulReturn;
-        } else {
-            newState = UnsuccessfulReturn;
-        }
-
-        return newState;
-    }
-
-    private State updateListMoviesState(String input) {
-
-        if (input.equals("")) {
-            return State.MainMenu;
-        }
-
-        Movie movie;
-        try {
-            movie = movies.getMovie(input);
-        } catch(NoSuchMovieException e) {
-            movie = null;
-        }
-
-        State nextState;
-        if (movie != null && movie.isAvailable()) {
-            movie.checkout();
-            nextState = State.SuccessfulMovieCheckout;
-        } else {
-            nextState = State.ListMovies;
-        }
-
-        return nextState;
     }
 }
