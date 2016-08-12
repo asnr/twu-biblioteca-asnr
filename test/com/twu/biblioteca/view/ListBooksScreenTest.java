@@ -51,7 +51,7 @@ public class ListBooksScreenTest {
 
     @Test
     public void listBooksScreenNotEqualToQuitScreen() {
-        ListBooksScreen screen = new ListBooksScreen(new Book[] {});
+        Screen screen = new ListBooksScreen(new Book[] {});
         assertFalse(screen.equals(new QuitScreen()));
     }
 
