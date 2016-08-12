@@ -1,6 +1,7 @@
 package com.twu.biblioteca;
 
-import com.twu.biblioteca.controller.AppController;
+import com.twu.biblioteca.controller.AppState;
+import com.twu.biblioteca.controller.LoginState;
 import com.twu.biblioteca.model.Movie;
 import com.twu.biblioteca.model.MovieCollection;
 import com.twu.biblioteca.view.QuitScreen;
@@ -25,19 +26,21 @@ public class BibliotecaApp {
                 new Movie("M001", "A Movie", "A Director", Year.of(1978), 1)
         };
 
-        BookCollection collection = new BookCollection(books);
+        BookCollection bookCollection = new BookCollection(books);
         MovieCollection movieCollection = new MovieCollection(movies);
-        AppController controller = new AppController(collection, movieCollection);
 
         Scanner consoleInput = new Scanner(System.in);
 
-        runApp(consoleInput, System.out, controller);
+        runApp(consoleInput, System.out, bookCollection, movieCollection);
     }
 
 
-    public static void runApp(Scanner in, PrintStream out, AppController controller) {
+    public static void runApp(Scanner in, PrintStream out,
+                              BookCollection books, MovieCollection movies) {
 
-        Screen currScreen = controller.getCurrentScreen();
+        AppState state = new LoginState(books, movies);
+
+        Screen currScreen = state.getScreen();
         out.println(currScreen.printScreen());
 
         Screen lastScreen = new QuitScreen();
@@ -45,7 +48,8 @@ public class BibliotecaApp {
         while (!currScreen.equals(lastScreen)) {
 
             String userInput = in.nextLine();
-            currScreen = controller.getNextScreen(userInput);
+            state = state.nextState(userInput);
+            currScreen = state.getScreen();
             out.println(currScreen.printScreen());
 
         }
