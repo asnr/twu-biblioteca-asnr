@@ -1,9 +1,6 @@
 package com.twu.biblioteca.controller;
 
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.MovieCollection;
-import com.twu.biblioteca.model.NoSuchMovieException;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.ListMoviesScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.view.SuccessfulMovieCheckoutScreen;
@@ -15,11 +12,14 @@ public class BorrowMovieState implements AppState {
         BorrowMovie, SuccessfulCheckout
     }
 
+    private Users users;
     private BookCollection books;
     private MovieCollection movies;
     private BorrowMovieStage stage;
 
-    public BorrowMovieState(BookCollection books, MovieCollection movies) {
+    public BorrowMovieState(Users users,
+                            BookCollection books, MovieCollection movies) {
+        this.users = users;
         this.books = books;
         this.movies = movies;
         this.stage = BorrowMovieStage.BorrowMovie;
@@ -53,7 +53,7 @@ public class BorrowMovieState implements AppState {
 
     private AppState borrowMovieNextState(String input) {
         if (input.equals("")) {
-            return new MainMenuState(books, movies);
+            return new MainMenuState(users, books, movies);
         }
 
         Movie movie;

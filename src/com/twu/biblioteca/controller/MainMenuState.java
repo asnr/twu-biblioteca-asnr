@@ -2,6 +2,8 @@ package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.model.BookCollection;
 import com.twu.biblioteca.model.MovieCollection;
+import com.twu.biblioteca.model.User;
+import com.twu.biblioteca.model.Users;
 import com.twu.biblioteca.view.InvalidOptionScreen;
 import com.twu.biblioteca.view.MainMenuScreen;
 import com.twu.biblioteca.view.Screen;
@@ -12,15 +14,19 @@ public class MainMenuState implements AppState {
         MainMenu, InvalidOption
     }
 
+    private Users users;
     private BookCollection books;
     private MovieCollection movies;
+
     private MainMenuStage stage;
 
-    public MainMenuState(BookCollection books, MovieCollection movies) {
+    public MainMenuState(Users users, BookCollection books, MovieCollection movies) {
+        this.users = users;
         this.books = books;
         this.movies = movies;
         this.stage = MainMenuStage.MainMenu;
     }
+
 
     @Override
     public AppState nextState(String input) {
@@ -52,13 +58,13 @@ public class MainMenuState implements AppState {
     private AppState menuNextState(String input) {
         switch (input) {
             case MainMenuScreen.ListBooksOption:
-                return new BorrowBookState(books, movies);
+                return new BorrowBookState(users, books, movies);
             case MainMenuScreen.ReturnBooksOption:
-                return new ReturnBookState(books, movies);
+                return new ReturnBookState(users, books, movies);
             case MainMenuScreen.ListMoviesOption:
-                return new BorrowMovieState(books, movies);
+                return new BorrowMovieState(users, books, movies);
             case MainMenuScreen.QuitOption:
-                return new QuitState(books, movies);
+                return new QuitState(users, books, movies);
             default:
                 stage = MainMenuStage.InvalidOption;
                 return this;

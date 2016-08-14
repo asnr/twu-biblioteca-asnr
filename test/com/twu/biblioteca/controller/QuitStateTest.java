@@ -3,10 +3,7 @@ package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.controller.AppState;
 import com.twu.biblioteca.controller.QuitState;
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.MovieCollection;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.QuitScreen;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +20,7 @@ public class QuitStateTest {
     public void setUp() {
         this.emptyBookCollection = new BookCollection(new Book[] {});
         this.emptyMovieCollection = new MovieCollection(new Movie[] {});
-        this.quitState = new QuitState(
+        this.quitState = new QuitState(new Users(new User[] {}),
                 emptyBookCollection, emptyMovieCollection);
     }
 

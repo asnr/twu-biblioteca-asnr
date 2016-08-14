@@ -1,10 +1,7 @@
 package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.controller.*;
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.Movie;
-import com.twu.biblioteca.model.MovieCollection;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.InvalidOptionScreen;
 import com.twu.biblioteca.view.ListBooksScreen;
 import com.twu.biblioteca.view.MainMenuScreen;
@@ -16,15 +13,16 @@ import static org.junit.Assert.assertTrue;
 
 public class MainMenuStateTest {
 
-    private BookCollection emptyBookCollection;
-    private MovieCollection emptyMovieCollection;
     private MainMenuState mainMenu;
 
     @Before
     public void setUp() {
-        this.emptyBookCollection = new BookCollection(new Book[] {});
-        this.emptyMovieCollection = new MovieCollection(new Movie[] {});
-        this.mainMenu = new MainMenuState(emptyBookCollection, emptyMovieCollection);
+        User user = new User("000-0001", "password", "A Name", "a@email.com", "1234 5678");
+        Users users = new Users(new User[] {}, user);
+        BookCollection  emptyBookCollection = new BookCollection(new Book[] {});
+        MovieCollection emptyMovieCollection = new MovieCollection(new Movie[] {});
+        this.mainMenu = new MainMenuState(
+                users, emptyBookCollection, emptyMovieCollection);
     }
 
     @Test

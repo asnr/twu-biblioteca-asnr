@@ -1,9 +1,6 @@
 package com.twu.biblioteca.controller;
 
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.MovieCollection;
-import com.twu.biblioteca.model.NoSuchBookException;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.ListBooksScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.view.SuccessfulCheckoutScreen;
@@ -17,12 +14,14 @@ public class BorrowBookState implements AppState {
         Finished
     }
 
+    private Users users;
     private BookCollection books;
     private MovieCollection movies;
 
     private BorrowStage stage;
 
-    public BorrowBookState(BookCollection books, MovieCollection movies) {
+    public BorrowBookState(Users users, BookCollection books, MovieCollection movies) {
+        this.users = users;
         this.books = books;
         this.movies = movies;
         this.stage = BorrowStage.ListBooks;
@@ -43,7 +42,7 @@ public class BorrowBookState implements AppState {
                 break;
         }
         if (stage == BorrowStage.Finished) {
-            return new MainMenuState(books, movies);
+            return new MainMenuState(users, books, movies);
         } else {
             return this;
         }
@@ -78,7 +77,7 @@ public class BorrowBookState implements AppState {
 
         BorrowStage newStage;
         if (book != null && book.isAvailable()) {
-            book.checkout();
+            users.loggedInUser().checkout(book);
             newStage = BorrowStage.SuccessfulCheckout;
         } else {
             newStage = BorrowStage.UnsuccessfulCheckout;

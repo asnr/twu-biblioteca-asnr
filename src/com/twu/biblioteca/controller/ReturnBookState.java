@@ -1,10 +1,7 @@
 package com.twu.biblioteca.controller;
 
 
-import com.twu.biblioteca.model.Book;
-import com.twu.biblioteca.model.BookCollection;
-import com.twu.biblioteca.model.MovieCollection;
-import com.twu.biblioteca.model.NoSuchBookException;
+import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.ReturnBooksScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.view.SuccessfulReturnScreen;
@@ -16,11 +13,14 @@ public class ReturnBookState implements AppState {
         CheckedOutBooks, SuccessfulReturn, UnsuccessfulReturn, Finished
     }
 
+    private Users users;
     private BookCollection books;
     private MovieCollection movies;
     private ReturnBookStage stage;
 
-    public ReturnBookState(BookCollection books, MovieCollection movies) {
+
+    public ReturnBookState(Users users, BookCollection books, MovieCollection movies) {
+        this.users = users;
         this.books = books;
         this.movies = movies;
         this.stage = ReturnBookStage.CheckedOutBooks;
@@ -42,7 +42,7 @@ public class ReturnBookState implements AppState {
         }
 
         if (stage == ReturnBookStage.Finished) {
-            return new MainMenuState(books, movies);
+            return new MainMenuState(users, books, movies);
         } else {
             return this;
         }
@@ -52,7 +52,8 @@ public class ReturnBookState implements AppState {
     public Screen getScreen() {
         switch (stage) {
             case CheckedOutBooks:
-                return new ReturnBooksScreen(books.checkedOutBooks());
+                return new ReturnBooksScreen(
+                        users.loggedInUser().checkedOutBooks());
             case SuccessfulReturn:
                 return new SuccessfulReturnScreen();
             case UnsuccessfulReturn:
@@ -77,8 +78,8 @@ public class ReturnBookState implements AppState {
         }
 
         ReturnBookStage nextStage;
-        if (book != null && !book.isAvailable()) {
-            book.checkin();
+        if (book != null && users.loggedInUser().doesHold(book)) {
+            users.loggedInUser().checkin(book);
             nextStage = ReturnBookStage.SuccessfulReturn;
         } else {
             nextStage = ReturnBookStage.UnsuccessfulReturn;

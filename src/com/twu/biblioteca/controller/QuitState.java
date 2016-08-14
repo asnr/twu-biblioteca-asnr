@@ -3,12 +3,13 @@ package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.model.BookCollection;
 import com.twu.biblioteca.model.MovieCollection;
+import com.twu.biblioteca.model.Users;
 import com.twu.biblioteca.view.QuitScreen;
 import com.twu.biblioteca.view.Screen;
 
 public class QuitState implements AppState {
 
-    public QuitState(BookCollection books, MovieCollection movies) {
+    public QuitState(Users users, BookCollection books, MovieCollection movies) {
     }
 
     @Override
