@@ -32,27 +32,26 @@ public class MainMenuStateTest {
 
     @Test
     public void selectListBooksOptionReturnsListBooksState() {
-        assertEquals(BorrowBookState.class,
-                mainMenu.nextState(MainMenuScreen.ListBooksOption).getClass());
-
+        AppState state = mainMenu.nextState(MainMenuScreen.ListBooksOption);
+        assertTrue(state instanceof BorrowBookState);
     }
 
     @Test
     public void selectReturnBooksOptionReturnsReturnBooksState() {
-        assertEquals(ReturnBookState.class,
-                mainMenu.nextState(MainMenuScreen.ReturnBooksOption).getClass());
+        AppState state = mainMenu.nextState(MainMenuScreen.ReturnBooksOption);
+        assertTrue(state instanceof ReturnBookState);
     }
 
     @Test
     public void selectListMoviesOptionReturnsBorrowMovieState() {
-        assertEquals(BorrowMovieState.class,
-                mainMenu.nextState(MainMenuScreen.ListMoviesOption).getClass());
+        AppState state = mainMenu.nextState(MainMenuScreen.ListMoviesOption);
+        assertTrue(state instanceof BorrowMovieState);
     }
 
     @Test
     public void selectQuitOptionReturnsQuitState() {
-        assertEquals(QuitState.class,
-                mainMenu.nextState(MainMenuScreen.QuitOption).getClass());
+        AppState state = mainMenu.nextState(MainMenuScreen.QuitOption);
+        assertTrue(state instanceof QuitState);
     }
 
     @Test
