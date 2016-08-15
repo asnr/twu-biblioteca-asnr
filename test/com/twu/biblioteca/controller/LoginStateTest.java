@@ -30,7 +30,7 @@ public class LoginStateTest {
 
     @Test
     public void defaultScreenIsEnterUsernameScreen() {
-        assertEquals(new EnterUsernameScreen(), state.getScreen());
+        assertEquals(new EnterLibraryNumberScreen(), state.getScreen());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class LoginStateTest {
         state = state.nextState("").nextState("");
         assertEquals(new UnsuccessfulLoginScreen(), state.getScreen());
         state = state.nextState("");
-        assertEquals(new EnterUsernameScreen(), state.getScreen());
+        assertEquals(new EnterLibraryNumberScreen(), state.getScreen());
     }
 
     @Test

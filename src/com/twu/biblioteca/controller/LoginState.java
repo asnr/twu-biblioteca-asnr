@@ -2,11 +2,9 @@ package com.twu.biblioteca.controller;
 
 import com.twu.biblioteca.model.*;
 import com.twu.biblioteca.view.EnterPasswordScreen;
-import com.twu.biblioteca.view.EnterUsernameScreen;
+import com.twu.biblioteca.view.EnterLibraryNumberScreen;
 import com.twu.biblioteca.view.Screen;
 import com.twu.biblioteca.view.UnsuccessfulLoginScreen;
-
-import javax.security.auth.login.FailedLoginException;
 
 
 public class LoginState implements AppState {
@@ -68,7 +66,7 @@ public class LoginState implements AppState {
     public Screen getScreen() {
         switch (stage) {
             case EnterUsername:
-                return new EnterUsernameScreen();
+                return new EnterLibraryNumberScreen();
             case EnterPassword:
                 return new EnterPasswordScreen();
             case Failed:
