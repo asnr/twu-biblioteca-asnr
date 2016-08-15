@@ -65,4 +65,10 @@ public class MainMenuStateTest {
         assertEquals(new MainMenuScreen(),
                 mainMenu.nextState("!!!").nextState("").getScreen());
     }
+
+    @Test
+    public void selectAccountDetailsReturnsAccountDetailsState() {
+        AppState state = mainMenu.nextState(MainMenuScreen.AccountDetailsOption);
+        assertTrue(state instanceof AccountDetailsState);
+    }
 }

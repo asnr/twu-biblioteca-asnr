@@ -27,6 +27,18 @@ public class User {
         return libraryNum;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
     public boolean loginMatches(String libraryNum, String password) {
         return libraryNum.equals(this.getLibraryNum())
                 && password.equals(this.password);
@@ -49,4 +61,5 @@ public class User {
     public Book[] checkedOutBooks() {
         return checkedOutBooks.toArray(new Book[checkedOutBooks.size()]);
     }
+
 }

@@ -63,6 +63,8 @@ public class MainMenuState implements AppState {
                 return new ReturnBookState(users, books, movies);
             case MainMenuScreen.ListMoviesOption:
                 return new BorrowMovieState(users, books, movies);
+            case MainMenuScreen.AccountDetailsOption:
+                return new AccountDetailsState(users, books, movies);
             case MainMenuScreen.QuitOption:
                 return new QuitState(users, books, movies);
             default:
