@@ -1,18 +1,18 @@
 
 Program design
-==============
+--------------
 
 The app is structured around a cheap and cheerful ModelViewController implementation.
 
 For the view, each app screen is it's own class that implements a printScreen() function.
 
-The controller is a big ol' switch statement which takes care of processing user input to update the model and move between screens. It could be a finite state machine, but that felt a little excessive.
+The controller is a finite state machine takes care of processing user input to update the model and move between screens.
 
 The model models.
 
 
 Run and test
-============
+------------
 
 To run, run BibliotecaApp class from inside Intellij IDEA.
 
@@ -22,7 +22,8 @@ I guess you should be able to test and run from the console, but I'm going to be
 
 
 Instructions to push your code to github.com
-============================================
+--------------------------------------------
+
 1. Sign into GitHub and create a new repository
         Repository name: twu-biblioteca-yourname
         Privacy level: Public
@@ -45,7 +46,8 @@ Instructions to push your code to github.com
     $ git push origin master
 
 Instructions to open your code in Intellij
-==========================================
+------------------------------------------
+
 1. Go to File -> Open (or Open Project)
 2. Select the directory containing the code
 DONE !
